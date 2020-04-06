@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Page Title</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    .container {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .left-drawer {
+        position: absolute;
+        top: 92px;
+        left: 0;
+        height: 700px;
+        background-color:#333333;
+        color: #fff;
+        transition: all 0.15s ease-in;
+        z-index: 250;
+    }
+    .right-drawer{
+        position: absolute;
+        top:0;
+        right: 0;
+        height: auto;
+        background-color: #333333;
+        color: #fff;
+        transition: all 0.15s ease-in;
+        z-index: 250;
+        margin-top: 39px;
+    }
+    .left-drawer--hide {
+        transform: translateX(-100%);
+    }
+
+    .right-drawer--hide {
+        transform: translateX(100%);
+    }
+
+    .toggle-btn {
+        position: fixed;
+        top: 50%;
+        width: 25px;
+        height: 80px;
+        text-align: center;
+        line-height: 30px;
+        transform:translateY(50%);
+        background-color: #333;
+        font-size: 18px;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        z-index: 250;
+    }
+    .toggle-btn-left {
+        position: fixed;
+        top: 50%;
+        left: 15%;
+        background-image: url(img/left.png);
+    }
+    .btn-left-temp{        
+        position: fixed;
+        top: 50%;
+        left: 0;
+    }
+
+    .toggle-btn-right {
+        position: fixed;
+        top: 50%;
+        right: 30%;
+        background-image: url(img/right.png);
+    }    
+    .btn-right-temp{        
+        position: fixed;
+        top: 50%;
+        right:0;
+    }
+
+    .left-drawer {
+        width: 15%;
+        left: 0;
+        overflow: scroll;
+    }
+
+    .right-drawer {
+        width: 30%;
+        right: 0;
+    }
+
+</style>
+</head>
+<body>
+<div id="nav">
+    <div id="img" style="float: left;">
+        <img src="img/logo.png" style="margin-left: 10px;margin-top: 10px;">
+    </div>
+    <div id="navli">
+        <ul>
+            <li id="li-mylesson"><a href="#">我的课程</a></li>
+            <li id="li-login"><a href="#">登陆</a></li>
+            <li id="li-register"><a href="#">注册</a></li>
+        </ul>
+    </div>
+</div> 
+
+<div>
+   <div class="left-drawer drawer">
+        <!-- 收起/展开按钮 -->
+        <div id="search" style="background-color: #111114;text-align: center;padding: 2px;">
+            <p><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbspweb 图谱搜索</p>
+            <div class="row" style="margin-bottom: 5px;">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Search for...">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                      </span>
+                    </div>
+                  </div>
+            </div>
+        </div>
+
+        <div id="leftli">
+            <ul class="firstul">
+                <li class="firstli" id="sch"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbsp学校                   
+                </li>
+                <div class="secmenu" id="sch-secmenu">
+                       <ul>
+                            <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbsp佛山科学技术学院</li>
+                        </ul> 
+                </div> 
+                <li class="firstli" id="lesson"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbsp课程                    
+                </li>
+                <div class="secmenu" id="les-secmenu">
+                        <ul>
+                            <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbsp c</li>
+                            <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbsp c#</li>
+                            <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbsp php</li>
+                            <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbsp java</li>
+                            <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbsp python</li>
+                        </ul>
+                </div>
+                <li class="firstli" id="teacher"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbsp老师                   
+                </li>
+                <div class="secmenu" id="tea-secmenu">
+                       <ul>
+                            <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbspteacher1</li>
+                            <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbspteacher2</li>
+                            <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp&nbspteacher3</li>
+                        </ul> 
+                </div> 
+            </ul>
+        </div>      
+    </div> 
+    <div>
+        <button class="toggle-btn toggle-btn-left"></button>
+    </div> 
+</div>
+
+
+<div class="container">   
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div id="main" style="width:100%;height:400px;"></div>
+    
+</div>
+
+<div class="right-drawer drawer">
+        <div id="topimg">
+            <img src="img/edc.gif" style="width: 100%;">
+        </div>
+
+        <div id="user" style="width: 100%;height: 330px;text-align: center;">
+            <div class="container">
+                <div class="row">
+                    <div id="login-in">
+                        <div id="loginimg" style="width: 30%;float: left;">
+                            <img src="img/loginimg.png" style="padding: 15px;margin-top: 80px;">
+                        </div>
+                        <form style="padding: 15px;width: 70%;float: right;margin-top: 30px;">
+                            <div class="input-group input-group-lg">
+                              <span class="input-group-addon" id="sizing-addon2">账&nbsp&nbsp号</span>
+                              <input type="text" name="usernum" class="form-control" aria-describedby="sizing-addon2">
+                            </div>
+                            <div class="input-group input-group-lg">
+                              <span class="input-group-addon" id="sizing-addon2">密&nbsp&nbsp码</span>
+                              <input type="password" name="password" class="form-control" aria-describedby="sizing-addon2">
+                            </div>
+
+                                <span style="float: left;padding:0px 35px;margin-top: 20px"><a href="#">注册账号</a></span><span style="float: right;padding:0px 35px;margin-top: 20px"><a href="#">忘记密码</a></span>
+                                <div style="text-align: center;">
+                                    <button type="button" class="btn btn-info" name="loginbtn" style="margin-top: 10px;width: 180px;">登陆</button>
+                                </div>
+                                <p style="margin-top: 20px;color: #999;">其他方式登陆&nbsp
+                                    <a href="#">
+                                        <img src="img/qq.png" style="width: 18px;height: 18px;">
+                                    </a>&nbsp
+                                    <a href="#">
+                                        <img src="img/weixin.png" style="width: 18px;height: 18px;">
+                                    </a>&nbsp
+                                    <a href="#">
+                                        <img src="img/xinlang.png" style="width: 18px;height: 18px;">
+                                    </a>
+                                </p>                                                        
+                        </form>
+                    </div>
+                </div>
+                    <p style="margin-top: 5px;"><a href="#" style="color: #000;font-size: 12px;">遇到技术问题,请点击这里</a></p>
+                </div>
+                   
+                
+                <div id="bottomimg">
+                    <p style="padding-top: 170px;">Copyright © 2018-2030 Nagin & Black All Right Reserved</p>
+                </div> 
+            </div>  
+
+                             
+        </div>
+
+        
+</div>
+<button class="toggle-btn toggle-btn-right"></button>
+
+
+
+<script src="js/echarts.min.js"></script>
+<!-- 注册tab -->
+<script type="text/javascript">
+    $('#self').click(function(){
+        $('#selfregister').css("display","block");
+        $('#comregister').css('display','none');
+    });
+    $('#school').click(function(){
+        $('#selfregister').css("display","none");
+        $('#comregister').css('display','block');
+    });
+</script>
+<!-- 侧栏显示，隐藏 -->
+<script>
+$(document).ready(function(){ 
+    var i=1;
+    $('.toggle-btn-left').click(function () {
+        // body...        
+        $('.left-drawer').toggle();
+        $('.toggle-btn-left').toggleClass('btn-left-temp');
+    });
+
+    $('.toggle-btn-right').click(function () {
+        // body...
+        $('.right-drawer').toggle();
+        $('.toggle-btn-right').toggleClass('btn-right-temp');
+    });
+
+});
+</script>
+
+<script type="text/javascript">
+    $('#sch').click(function () {
+        // body...
+        $('#sch-secmenu').toggle();
+    });
+    $('#lesson').click(function () {
+        // body...
+        $('#les-secmenu').toggle();
+    })
+    $('#teacher').click(function () {
+        // body...
+        $('#tea-secmenu').toggle();
+    })
+
+</script>
+</body>
+</html>
