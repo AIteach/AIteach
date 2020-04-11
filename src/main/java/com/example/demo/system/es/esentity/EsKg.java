@@ -7,6 +7,7 @@
  */
 package com.example.demo.system.es.esentity;
 
+import com.example.demo.system.mysql.entity.Kg;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -14,7 +15,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import com.example.demo.system.mysql.entity.Kg;
+import java.io.Serializable;
 
 /**
  * @author Administrator
@@ -22,8 +23,8 @@ import com.example.demo.system.mysql.entity.Kg;
  */
 @Data
 @ToString
-@Document(indexName = "kg")
-public class EsKg {
+@Document(indexName = "kg_test")
+public class EsKg  implements Serializable {
 	@Id
 	private int kgId;
 	@Field(type = FieldType.Text, analyzer = "ik_max_word")

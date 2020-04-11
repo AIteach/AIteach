@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 /**
  * @author 84271
  */
+@Resource
 public class EsCourseServiceImpl extends BaseServiceImpl<EsCourse, Integer> implements EsCourseService {
     private EsCourseJpa esCourseJpa;
 

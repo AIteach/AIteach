@@ -2,6 +2,8 @@ package com.example.demo;
 
 import com.example.demo.system.es.esservice.EsNodeService;
 import com.example.demo.system.mysql.entity.Node;
+import com.example.demo.system.mysql.service.impl.ChapterService;
+import com.example.demo.system.mysql.service.impl.KgService;
 import com.example.demo.system.mysql.service.impl.NodeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +20,26 @@ public class MqTest {
     private NodeService nodeService;
     @Resource
     private EsNodeService esNodeService;
+    @Resource
+    private ChapterService chapterService;
+
+    @Resource
+    private KgService kgService;
+
+
+    @Test
+    public void test333() {
+        kgService.findAll().forEach(kg -> {
+            System.out.println(kg);
+            kgService.save(kg);
+        });
+
+    }
+
+    @Test
+    public void test33() {
+        chapterService.findAll().forEach(chapter -> chapterService.save(chapter));
+    }
 
     @Test
     public void test1() throws InterruptedException {

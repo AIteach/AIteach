@@ -6,6 +6,7 @@
  */
 package com.example.demo.system.es.esentity;
 
+import com.example.demo.system.mysql.entity.School;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -13,7 +14,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import com.example.demo.system.mysql.entity.School;
+import java.io.Serializable;
 
 /**
  * @author Administrator
@@ -21,8 +22,8 @@ import com.example.demo.system.mysql.entity.School;
  */
 @Data
 @ToString
-@Document(indexName = "school")
-public class EsSchool {
+@Document(indexName = "school_test")
+public class EsSchool implements Serializable {
     @Id
     private int id;
     private int nodeId;

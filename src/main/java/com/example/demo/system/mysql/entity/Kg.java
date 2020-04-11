@@ -41,15 +41,15 @@ public class Kg {
     private int kgParid;
     private int chapterId;
 
-    public EsKg toEsKg() {
+    public static EsKg toEsKg(Kg kg) {
         EsKg esKg = new EsKg();
-        esKg.setChapterId(chapterId);
-        esKg.setCourseId(courseId);
-        esKg.setCreaterId(createrId);
-        esKg.setKgId(kgId);
-        esKg.setKgDesc(kgDesc);
-        esKg.setNodeId(nodeId);
-        esKg.setKgName(kgName);
+        esKg.setChapterId(kg.getChapterId());
+        esKg.setCourseId(kg.getCourseId());
+        esKg.setCreaterId(kg.getCreaterId());
+        esKg.setKgId(kg.getKgId());
+        esKg.setKgDesc(kg.getKgDesc());
+        esKg.setNodeId(kg.getNodeId());
+        esKg.setKgName(kg.getKgName());
         return esKg;
     }
 }

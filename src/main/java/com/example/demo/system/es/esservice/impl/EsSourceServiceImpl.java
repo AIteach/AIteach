@@ -3,6 +3,7 @@ package com.example.demo.system.es.esservice.impl;
 import com.example.demo.system.es.esdao.EsSourceJpa;
 import com.example.demo.system.es.esentity.EsSource;
 import com.example.demo.system.es.esservice.EsSourceService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
@@ -10,6 +11,7 @@ import javax.annotation.Resource;
 /**
  * @author 84271
  */
+@Service
 public class EsSourceServiceImpl extends BaseServiceImpl<EsSource, Integer> implements EsSourceService {
 
     private EsSourceJpa esSourceJpa;

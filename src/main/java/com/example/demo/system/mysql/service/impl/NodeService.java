@@ -6,9 +6,11 @@
  */
 package com.example.demo.system.mysql.service.impl;
 
+import com.example.demo.mq.EsCustomer;
 import com.example.demo.system.mysql.dao.NodeJpaRepository;
 import com.example.demo.system.mysql.entity.Node;
 import com.example.demo.system.mysql.service.INodeService;
+import com.example.demo.util.JsonUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import java.util.List;
  */
 @Service("nodeService")
 public class NodeService implements INodeService {
+    private final static String ES_BEAN_NAME = "esNodeServiceImpl";
     @PersistenceContext
     private EntityManager entityManager;
     @Resource
@@ -44,7 +47,7 @@ public class NodeService implements INodeService {
 //        System.out.println(node);
         Node newNode = nodeJpaRepository.save(node);
         //往消息队列发送消息
-        rabbitTemplate.convertAndSend("", "", newNode.toEsNode());
+        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(ES_BEAN_NAME, Node.toEsNode(newNode)));
         return newNode;
     }
 
@@ -56,17 +59,18 @@ public class NodeService implements INodeService {
         // this.nodeJpaRepository.save(courseNode);
         System.out.println("加入课程中 。。。。。。。。。。等待");
         Node newNode = nodeJpaRepository.save(courseNode);
-        rabbitTemplate.convertAndSend("", "", newNode);
+        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(ES_BEAN_NAME, Node.toEsNode(newNode)));
         return newNode.getId();
     }
 
+    @Override
     @Modifying
     @Transactional
     public int updateNode(Node node) {
         // this.nodeJpaRepository.save(courseNode);
         System.out.println("修改课程中 。。。。。。。。。。等待");
         Node newNode = nodeJpaRepository.save(node);
-        rabbitTemplate.convertAndSend("", "", newNode);
+        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(ES_BEAN_NAME, Node.toEsNode(newNode)));
         return newNode.getId();
     }
 
@@ -108,7 +112,7 @@ public class NodeService implements INodeService {
      */
     public void deleteById(int deleteNodeId) {
         nodeJpaRepository.deleteById(deleteNodeId);
-        rabbitTemplate.convertAndSend("", "", deleteNodeId);
+        rabbitTemplate.convertAndSend("", EsCustomer.DELETE, JsonUtils.getEsMessage(ES_BEAN_NAME, deleteNodeId));
     }
 
     public List<Node> findByCategoryGreaterThanEqual(int i) {
