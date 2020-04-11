@@ -1,0 +1,169 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+.container {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+
+.left-drawer {
+	position: absolute;
+	top: 92px;
+	left: 0;
+	height: 700px;
+	background-color: #333333;
+	color: #fff;
+	transition: all 0.15s ease-in;
+	z-index: 250;
+}
+
+.right-drawer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: auto;
+	background-color: #333333;
+	color: #fff;
+	transition: all 0.15s ease-in;
+	z-index: 250;
+	margin-top: 39px;
+}
+
+.left-drawer--hide {
+	transform: translateX(-100%);
+}
+
+.right-drawer--hide {
+	transform: translateX(100%);
+}
+
+.toggle-btn {
+	position: fixed;
+	top: 50%;
+	width: 25px;
+	height: 80px;
+	text-align: center;
+	line-height: 30px;
+	transform: translateY(50%);
+	background-color: #333;
+	font-size: 18px;
+	color: #fff;
+	cursor: pointer;
+	border: none;
+	outline: none;
+	z-index: 250;
+}
+
+.toggle-btn-left {
+	position: fixed;
+	top: 50%;
+	left: 16%;
+	background-image: url(../img/left.png);
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+}
+
+.btn-left-temp {
+	position: fixed;
+	top: 50%;
+	left: 0;
+}
+
+.toggle-btn-right {
+	position: fixed;
+	top: 50%;
+	right: 35%;
+	background-image: url(../img/right.png);
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+
+.btn-right-temp {
+	position: fixed !important;
+	top: 50% !important;
+	right: 0 !important;
+}
+
+.left-drawer {
+	width: 16%;
+	left: 0;
+	overflow: auto;
+}
+
+.right-drawer {
+	width: 35%;
+	right: 0;
+}
+
+ul, li {
+	list-style-type: none;
+}
+
+#treeView {
+	width: 600px;
+	margin: 20px auto 0;
+}
+
+.treeNode {
+	height: 32px;
+	border-width: 1px 0;
+	cursor: pointer;
+	font-size: 0;
+}
+
+.treeNode:hover {
+	background: #f4f9fd;
+	border-color: #e5f0fb;
+}
+
+.treeNode-cur, .treeNode-cur:hover {
+	border-color: #BBD4EF #fff;
+}
+
+.icon {
+	display: inline-block;
+	background: url(../ico/icon.png) no-repeat;
+	vertical-align: middle;
+}
+
+.icon-minus {
+	width: 15px;
+	height: 15px;
+	margin: 0 4px;
+	background-position: -30px -22px;
+}
+
+.icon-add {
+	width: 15px;
+	height: 15px;
+	margin: 0 4px;
+	background-position: -30px 0;
+}
+
+.icon-file {
+	width: 22px;
+	height: 18px;
+	margin-right: 5px;
+	background-position: 0 -22px;
+}
+
+.title {
+	position: relative;
+	top: 6px;
+	font-size: 14px;
+}
+
+.treeNode-empty .icon-minus {
+	background-position: -999px -999px;
+}
+
+.treeNode-empty .icon-add {
+	background-position: -999px -999px;
+}
+
+#treeView ul.none {
+	display: none;
+}
