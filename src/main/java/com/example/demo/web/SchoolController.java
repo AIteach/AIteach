@@ -7,35 +7,19 @@
 package com.example.demo.web;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
-import com.example.demo.utils.NodeUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.example.demo.system.mysql.entity.*;
+import com.example.demo.system.mysql.service.impl.*;
+import com.example.demo.util.NodeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.alibaba.fastjson.JSONObject;
-import com.example.demo.system.mysql.entity.Course;
-import com.example.demo.system.mysql.entity.EchartJson;
-import com.example.demo.system.mysql.entity.Kg;
-import com.example.demo.system.mysql.entity.Link;
-import com.example.demo.system.mysql.entity.Linking;
-import com.example.demo.system.mysql.entity.Name;
-import com.example.demo.system.mysql.entity.Node;
-import com.example.demo.system.mysql.entity.NodeType;
-import com.example.demo.system.mysql.entity.School;
-import com.example.demo.system.mysql.entity.Source;
-import com.example.demo.system.mysql.service.impl.CourseService;
-import com.example.demo.system.mysql.service.impl.KgService;
-import com.example.demo.system.mysql.service.impl.LinkingService;
-import com.example.demo.system.mysql.service.impl.NodeService;
-import com.example.demo.system.mysql.service.impl.NodeTypeService;
-import com.example.demo.system.mysql.service.impl.SchoolService;
-import com.example.demo.system.mysql.service.impl.SourceService;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Administrator
@@ -89,15 +73,18 @@ public class SchoolController {
 
         if (httpsession.getAttribute("currentUser") != null) {
             // 开始组json
-            EchartJson echartjson = new EchartJson(); // 新的返回json类
-            echartjson.setType("force"); // 设置图的样式
+            // 新的返回json类
+            EchartJson echartjson = new EchartJson();
+            // 设置图的样式
+            echartjson.setType("force");
 
             // 设置类目
             echartjson.setCategories(nodeTypeService.findAllNodeTypeName());
 
 
             //遍历结点
-            List<Node> nodes = new ArrayList<>();  //遍历子节点
+            //遍历子节点
+            List<Node> nodes = new ArrayList<>();
 
             School school = schoolService.findBySchoolId(schoolId);
             model.addAttribute("schoolNode", school);
@@ -142,10 +129,12 @@ public class SchoolController {
             // 设置连接开始
             List<Linking> linkings = new ArrayList<Linking>();
 
-            for (int i = 0; i < nodes.size(); i++)
-                linkings.addAll(linkingService.findOneBySql("linking", "rear_id", nodes.get(i).getId())); // 读取数据库的全部linking连接关系
+            for (int i = 0; i < nodes.size(); i++) {
+                // 读取数据库的全部linking连接关系
+                linkings.addAll(linkingService.findOneBySql("linking", "rear_id", nodes.get(i).getId()));
+            }
 
-            echartjson.setLinks(NodeUtil.change(linkings, nodes));
+            echartjson.setLinks(NodeUtils.change(linkings, nodes));
 
             model.addAttribute("msg", JSONObject.toJSONString(echartjson));
             model.addAttribute("loginType", true);

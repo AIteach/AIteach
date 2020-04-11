@@ -1,20 +1,18 @@
 package com.example.demo.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.system.mysql.entity.*;
 import com.example.demo.system.mysql.service.impl.*;
-import com.example.demo.utils.NodeUtil;
+import com.example.demo.util.NodeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.alibaba.fastjson.JSONObject;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class CourseController {
@@ -68,9 +66,10 @@ public class CourseController {
 
         List<Linking> linkings = new ArrayList();
         //System.out.println("我来自遥远的草原");
-        for (int i = 0; i < nodes.size(); i++)
+        for (int i = 0; i < nodes.size(); i++) {
             linkings.addAll(this.linkingService.findOneBySql("linking", "rear_id", Integer.valueOf(((Node) nodes.get(i)).getId())));
-        echartjson.setLinks(NodeUtil.change(linkings, nodes));
+        }
+        echartjson.setLinks(NodeUtils.change(linkings, nodes));
         String jsonString = JSONObject.toJSONString(echartjson);
         model.addAttribute("msg", jsonString);
         model.addAttribute("nodeid", Integer.valueOf(((Course) course.get(0)).getNodeId()));

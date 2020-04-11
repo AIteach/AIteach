@@ -1,9 +1,12 @@
-package com.example.demo.utils;
+package com.example.demo.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateUtil {
+/**
+ * @author 84271
+ */
+public class DateUtils {
 
     private static final SimpleDateFormat formatter;
 

@@ -1,11 +1,14 @@
-package com.example.demo.utils;
+package com.example.demo.util;
 
 import com.example.demo.system.mysql.entity.Name;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentUtil {
+/**
+ * @author 84271
+ */
+public class CommentUtils {
     public static List<Name> getCategories() {
         List<Name> names = new ArrayList<Name>();
         names.add(new Name("评论内容"));

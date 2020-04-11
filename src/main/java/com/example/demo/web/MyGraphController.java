@@ -1,33 +1,21 @@
 package com.example.demo.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
-import com.example.demo.utils.NodeUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.example.demo.system.mysql.entity.*;
+import com.example.demo.system.mysql.service.impl.*;
+import com.example.demo.util.NodeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.alibaba.fastjson.JSONObject;
-import com.example.demo.system.mysql.entity.Course;
-import com.example.demo.system.mysql.entity.EchartJson;
-import com.example.demo.system.mysql.entity.Kg;
-import com.example.demo.system.mysql.entity.Link;
-import com.example.demo.system.mysql.entity.Linking;
-import com.example.demo.system.mysql.entity.Member;
-import com.example.demo.system.mysql.entity.Name;
-import com.example.demo.system.mysql.entity.Node;
-import com.example.demo.system.mysql.entity.NodeType;
-import com.example.demo.system.mysql.service.impl.CourseService;
-import com.example.demo.system.mysql.service.impl.KgService;
-import com.example.demo.system.mysql.service.impl.LinkingService;
-import com.example.demo.system.mysql.service.impl.MemberService;
-import com.example.demo.system.mysql.service.impl.NodeService;
-import com.example.demo.system.mysql.service.impl.NodeTypeService;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * @author 84271
+ */
 @Controller
 public class MyGraphController {
     @Resource
@@ -55,14 +43,17 @@ public class MyGraphController {
             return "login";
         } else {
             model.addAttribute("loginType", true);
-            EchartJson echartjson = new EchartJson();  //新的返回json类
-            echartjson.setType("force");        //设置图的样式
+            //新的返回json类
+            EchartJson echartjson = new EchartJson();
+            //设置图的样式
+            echartjson.setType("force");
 
             //设置类目
             echartjson.setCategories(nodeTypeService.findAllNodeTypeName());
 
 
-            List<Node> nodes = new ArrayList<Node>();  //遍历子节点
+            //遍历子节点
+            List<Node> nodes = new ArrayList<Node>();
             //课程结点
             List<Course> course = courseService.findOneBySql("course", "creater_id", member.getId());
             model.addAttribute("courseNode", course);
@@ -90,10 +81,12 @@ public class MyGraphController {
 
             //设置连接开始
             List<Linking> linkings = new ArrayList<Linking>();
-            for (int i = 0; i < nodes.size(); i++)
-                linkings.addAll(linkingService.findOneBySql("linking", "rear_id", nodes.get(i).getId())); //读取数据库的全部linking连接关系
+            for (int i = 0; i < nodes.size(); i++) {
+                //读取数据库的全部linking连接关系
+                linkings.addAll(linkingService.findOneBySql("linking", "rear_id", nodes.get(i).getId()));
+            }
 
-            echartjson.setLinks(NodeUtil.change(linkings,nodes));
+            echartjson.setLinks(NodeUtils.change(linkings, nodes));
 
             model.addAttribute("msg", JSONObject.toJSONString(echartjson));
             return "graph/createrGraph";
@@ -109,21 +102,25 @@ public class MyGraphController {
         } else {
             model.addAttribute("loginType", true);
 
-            List<Kg> myCreaterKg = kgService.findOneBySql("kg", "creater_id", member.getId());
-            System.out.println(myCreaterKg.toString());
-            EchartJson echartjson = new EchartJson();  //新的返回json类
-            echartjson.setType("force");        //设置图的样式
+            List<Kg> myCreateKg = kgService.findOneBySql("kg", "creater_id", member.getId());
+            System.out.println(myCreateKg.toString());
+            //新的返回json类
+            EchartJson echartjson = new EchartJson();
+            //设置图的样式
+            echartjson.setType("force");
             //设置类目
             List<Name> names = new ArrayList<Name>();
-            List<Course> course = courseService.findAll();  //找到所有结点,拥有属性ID和属性name,形成name数组
+            //找到所有结点,拥有属性ID和属性name,形成name数组
+            List<Course> course = courseService.findAll();
             for (int i = 0; i < course.size(); i++) {
                 Name name = new Name(course.get(i).getCourseName());
                 names.add(name);
             }
             echartjson.setCategories(names);
-            List<Node> nodes = new ArrayList<Node>();  //遍历子节点
-            for (int j = 0; j < myCreaterKg.size(); j++) {
-                Node node = new Node(myCreaterKg.get(j).getKgName(), myCreaterKg.get(j).getCourseId(), 20, "/kg?kgId=" + myCreaterKg.get(j).getKgId(), myCreaterKg.get(j).getNodeId());
+            //遍历子节点
+            List<Node> nodes = new ArrayList<Node>();
+            for (int j = 0; j < myCreateKg.size(); j++) {
+                Node node = new Node(myCreateKg.get(j).getKgName(), myCreateKg.get(j).getCourseId(), 20, "/kg?kgId=" + myCreateKg.get(j).getKgId(), myCreateKg.get(j).getNodeId());
                 nodes.add(node);
                 //nodeService.saveUser(node);
             }

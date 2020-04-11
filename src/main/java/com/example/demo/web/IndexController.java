@@ -5,8 +5,8 @@ import com.example.demo.system.es.esentity.EsNode;
 import com.example.demo.system.es.esservice.EsNodeService;
 import com.example.demo.system.mysql.entity.*;
 import com.example.demo.system.mysql.service.impl.*;
-import com.example.demo.utils.EsUtil;
-import com.example.demo.utils.NodeUtil;
+import com.example.demo.util.EsUtils;
+import com.example.demo.util.NodeUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -85,7 +85,7 @@ public class IndexController {
                 //System.out.println(nodes.get(i).getId() + "  " + nodes.get(i).getName());
             }
 
-            echartjson.setLinks(NodeUtil.change(linkings, nodes));
+            echartjson.setLinks(NodeUtils.change(linkings, nodes));
 
             String jsonString = JSONObject.toJSONString(echartjson);
             model.addAttribute("msg", jsonString);
@@ -117,19 +117,22 @@ public class IndexController {
         List<Node> nodes = nodeService.findAll();
         echartjson.setNodes(nodes);
 
-        List<Linking> linkings = linkingService.findAll(); // 读取数据库的全部linking连接关系
-        echartjson.setLinks(NodeUtil.change(linkings, nodes));
+        // 读取数据库的全部linking连接关系
+        List<Linking> linkings = linkingService.findAll();
+        echartjson.setLinks(NodeUtils.change(linkings, nodes));
         return echartjson;
     }
 
 
     @PostMapping("/search")
     public String search(String searchContent, Model model) {
-        EchartJson echartjson = new EchartJson(); // 新的返回json类
-        echartjson.setType("force"); // 设置图的样式
+        // 新的返回json类
+        EchartJson echartjson = new EchartJson();
+        // 设置图的样式
+        echartjson.setType("force");
         // 设置类目
         echartjson.setCategories(nodeTypeService.findAllNodeTypeName());
-        Page<EsNode> search = esNodeServic.search(EsUtil.getSearchQuery("name", searchContent));
+        Page<EsNode> search = esNodeServic.search(EsUtils.getSearchQuery("name", searchContent));
         List<EsNode> content = search.getContent();
         //  for (EsNode esNode : content)
         //  System.out.println(esNode);
@@ -152,7 +155,7 @@ public class IndexController {
         // System.out.println(Arrays.toString(ids));
         List<Node> nodes = nodeService.findListById(ids);
         echartjson.setNodes(nodes);
-        echartjson.setLinks(NodeUtil.change(linkings, nodes));
+        echartjson.setLinks(NodeUtils.change(linkings, nodes));
         model.addAttribute("msg", JSONObject.toJSONString(echartjson));
         model.addAttribute("loginType", true);
         // 组json完毕
@@ -189,7 +192,10 @@ public class IndexController {
                             doubleNode = false;
                         }
                     }
-                    if (!doubleNode) nodes.add(sourceNode); //出现重复则不添加，不重复则添加
+                    //出现重复则不添加，不重复则添加
+                    if (!doubleNode) {
+                        nodes.add(sourceNode);
+                    }
                 }
 
                 if (linkings.get(i).getPreId() == searchNode.get(j).getId()) {
@@ -211,7 +217,7 @@ public class IndexController {
         }
         echartjson.setNodes(nodes);
 
-        echartjson.setLinks(NodeUtil.change(linkings, nodes));
+        echartjson.setLinks(NodeUtils.change(linkings, nodes));
 
         model.addAttribute("msg", JSONObject.toJSONString(echartjson));
         model.addAttribute("loginType", true);

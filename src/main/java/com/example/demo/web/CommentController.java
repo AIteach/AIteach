@@ -3,8 +3,8 @@ package com.example.demo.web;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.system.mysql.entity.*;
 import com.example.demo.system.mysql.service.impl.*;
-import com.example.demo.utils.CommentUtil;
-import com.example.demo.utils.DateUtil;
+import com.example.demo.util.CommentUtils;
+import com.example.demo.util.DateUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -120,7 +120,7 @@ public class CommentController {
     public EchartJson Comment(int commentId) {
         EchartJson echartjson = new EchartJson();
         echartjson.setType("force");
-        echartjson.setCategories(CommentUtil.getCategories());
+        echartjson.setCategories(CommentUtils.getCategories());
 
         CommentandName com = this.commentService.findCommentById(commentId);
         com.setCommentresponse(this.commentResponseService.findCommentResponseByCommentId(com.getComment().getId()));
@@ -135,7 +135,7 @@ public class CommentController {
         nodes.add(new Node(Integer.toString(com.getComment().getNodeId()), 3, 10, "/", nodes.size() + 1));
         links.add(new Link(0, 2, ""));
         //评论时间
-        nodes.add(new Node(DateUtil.dateFormat(com.getComment().getCtime()), 5, 10, "/", nodes.size() + 1));
+        nodes.add(new Node(DateUtils.dateFormat(com.getComment().getCtime()), 5, 10, "/", nodes.size() + 1));
         links.add(new Link(0, 3, ""));
         for (Node node : nodes)
             System.out.println(node);
