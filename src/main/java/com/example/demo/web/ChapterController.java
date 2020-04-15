@@ -4,7 +4,7 @@ package com.example.demo.web;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.system.mysql.entity.*;
 import com.example.demo.system.mysql.service.impl.*;
-import com.example.demo.util.NodeUtils;
+import com.example.demo.util.EchartjsonUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * @author 84271
+ */
 @Controller
 public class ChapterController {
     @Resource
@@ -38,60 +41,34 @@ public class ChapterController {
 
     @GetMapping("/chapter")
     public String chapterList(int chapterId, Model model) {
-        EchartJson echartjson = new EchartJson();  //新的返回json类
-        echartjson.setType("force");        //设置图的样式
-
-        //设置类目
-        echartjson.setCategories(nodeTypeService.findAllNodeTypeName());
-
-        List<Node> nodes = new ArrayList<>();  //遍历子节点
-        //知识结点
-        List<Chapter> chapter = chapterService.findOneBySql("chapter", "chapter_id", chapterId);
-        model.addAttribute("chapterNode", chapter);
-        String courseName = courseService.findOneBySql("course", "course_id", chapter.get(0).getCourseId()).get(0).getCourseName();
-        model.addAttribute("chapterNode", chapter);
-        model.addAttribute("courseName", courseName);
-        for (int i = 0; i < chapter.size(); i++) {
-            Node newChapterNode = nodeService.findOneBySql("node", "id", chapter.get(0).getNodeId()).get(0);
-            nodes.add(newChapterNode);
+        List<Name> allNodeTypeName = nodeTypeService.findAllNodeTypeName();
+        List<Node> nodes = new ArrayList();
+        Chapter chapter = chapterService.findOneByChapterId(chapterId);
+        nodes.add(new Node(chapter.getChapterId(), 2, chapter.getChapterName(), chapter.getChapterName(), 30, ""));
+        kgService.findKgBychapterId(chapterId).forEach(kg -> nodes.add(new Node(kg.getKgName(), 3, 20, "/kg?kgId=" + kg.getKgId(), kg.getNodeId())));
+        List<Link> links = new ArrayList();
+        for (int i = 1; i <= nodes.size(); i++) {
+            links.add(new Link(0, i, ""));
         }
-
-
-        //遍历子知识点
-        List<Kg> chapterSon = kgService.findOneBySql("kg", "chapter_id", chapterId);
-
-        //遍历子知识点
-
-        model.addAttribute("chapterSonNodes", chapterSon);
-
-        //开始组node数组
-        for (int i = 0; i < chapterSon.size(); i++) {
-            Node kgSonNodes = new Node(chapterSon.get(i).getKgName(), 3, 15, "/kg?kgId=" + chapterSon.get(i).getKgId(), chapterSon.get(i).getNodeId());
-            nodes.add(kgSonNodes);
-        }
-        echartjson.setNodes(nodes);
-
-
-        //设置连接开始
-        List<Linking> linkings = new ArrayList<>();
-        for (int i = 0; i < nodes.size(); i++)
-            linkings.addAll(linkingService.findOneBySql("linking", "rear_id", nodes.get(i).getId())); //读取数据库的全部linking连接关系
-        echartjson.setLinks(NodeUtils.change(linkings, nodes));
+        EchartJson echartjson = EchartjsonUtils.getEchartJson(allNodeTypeName, nodes, links);
         model.addAttribute("msg", JSONObject.toJSONString(echartjson));
-        return "chapter";
+        return "course";
     }
 
 
     @GetMapping("/chapterAddKg")
     public String chapterAddChapter(Integer kgId, int chapterId, Model model) {
-        List<Chapter> chapter = chapterService.findOneBySql("chapter", "chapter_id", chapterId);//建立一个列表来存放课程
-        model.addAttribute("chapterNode", chapter.get(0));//往前端传数据
+        //建立一个列表来存放课程
+        List<Chapter> chapter = chapterService.findOneBySql("chapter", "chapter_id", chapterId);
+        //往前端传数据
+        model.addAttribute("chapterNode", chapter.get(0));
         return "chapter/chapterAddKg";
     }
 
     @PostMapping("/doChapterAddKg")
     public String doChapterAddChapter(Kg kg, String value) {
-        Member member = (Member) httpsession.getAttribute("currentUser");//获取用户信息
+        //获取用户信息
+        Member member = (Member) httpsession.getAttribute("currentUser");
         if (member == null) {
             return "login";
         } else {

@@ -5,6 +5,7 @@ import com.example.demo.system.mysql.entity.*;
 import com.example.demo.system.mysql.service.impl.*;
 import com.example.demo.util.CommentUtils;
 import com.example.demo.util.DateUtils;
+import com.example.demo.util.EchartjsonUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,10 +119,7 @@ public class CommentController {
 
     @RequestMapping("/comment")
     public EchartJson Comment(int commentId) {
-        EchartJson echartjson = new EchartJson();
-        echartjson.setType("force");
-        echartjson.setCategories(CommentUtils.getCategories());
-
+        List<Name> names = CommentUtils.getCategories();
         CommentandName com = this.commentService.findCommentById(commentId);
         com.setCommentresponse(this.commentResponseService.findCommentResponseByCommentId(com.getComment().getId()));
         List<Node> nodes = new ArrayList<Node>();
@@ -137,14 +135,11 @@ public class CommentController {
         //评论时间
         nodes.add(new Node(DateUtils.dateFormat(com.getComment().getCtime()), 5, 10, "/", nodes.size() + 1));
         links.add(new Link(0, 3, ""));
-        for (Node node : nodes)
+        for (Node node : nodes) {
             System.out.println(node);
-
-//        System.out.println(com);
-//        System.out.println("-----------------");
+        }
         List<CommentResponseAndName> commentresponse = com.getCommentresponse();
         for (CommentResponseAndName commentResponseAndName : commentresponse) {
-            //  System.out.println(commentResponseAndName);
             if (commentResponseAndName.getCommentResponse().getResponseUserId() == com.getComment().getUserid()) {
                 nodes.add(new Node(commentResponseAndName.getCommentResponse().getContent(), 7, 10, "/", nodes.size() + 1));
                 int target = nodes.size() - 1;
@@ -153,9 +148,9 @@ public class CommentController {
                 links.add(new Link(target, nodes.size() - 1, ""));
             }
         }
-        echartjson.setNodes(nodes);
-        echartjson.setLinks(links);
-        return echartjson;
+//        echartjson.setNodes(nodes);
+//        echartjson.setLinks(links);
+        return EchartjsonUtils.getEchartJson(names, nodes, links);
     }
 
     @RequestMapping("/comment/getClassName")

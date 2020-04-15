@@ -3,7 +3,7 @@ package com.example.demo.web;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.system.mysql.entity.*;
 import com.example.demo.system.mysql.service.impl.*;
-import com.example.demo.util.NodeUtils;
+import com.example.demo.util.EchartjsonUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,51 +38,30 @@ public class CourseController {
     @Resource
     private ChapterService chapterService;
 
-    @GetMapping({"/course"})
+    @GetMapping("/course")
     public String courseIndex(int courseId, Model model) {
-        EchartJson echartjson = new EchartJson();
-        echartjson.setType("force");
-
-        echartjson.setCategories(nodeTypeService.findAllNodeTypeName());
-
+        List<Name> allNodeTypeName = nodeTypeService.findAllNodeTypeName();
         List<Node> nodes = new ArrayList();
-        List<Course> course = this.courseService.findOneBySql("course", "course_id", Integer.valueOf(courseId));
-        model.addAttribute("courseNode", course);
-        for (int i = 0; i < course.size(); i++) {
-            Node courseNode = (Node) this.nodeService
-                    .findOneBySql("node", "id", Integer.valueOf(((Course) course.get(0)).getNodeId())).get(0);
-            nodes.add(courseNode);
+        Course course = courseService.findCourseByCourseId(courseId);
+        nodes.add(new Node(course.getCourseId(), 1, course.getCourseName(), course.getCourseName(), 30, course.getUrl()));
+        chapterService.findChapterByCourseId(courseId).forEach(chapter -> nodes.add(new Node(chapter.getChapterName(), 2, 20, "/chapter?chapterId=" + chapter.getChapterId(), chapter.getNodeId())));
+        List<Link> links = new ArrayList<>();
+        for (int i = 1; i <= nodes.size(); i++) {
+            links.add(new Link(0, i, ""));
         }
-        List<Chapter> chapters = chapterService.findOneBySql("chapter", "chapter_id", Integer.valueOf(courseId));
-
-        model.addAttribute("chapterNode", chapters);
-        //System.out.println(kg);
-        for (int i = 0; i < chapters.size(); i++) {
-            Node node = new Node(chapters.get(i).getChapterName(), 2, 20, "/kg?kgId=" + chapters.get(i).getChapterId(), chapters.get(i).getNodeId());
-            nodes.add(node);
-        }
-        echartjson.setNodes(nodes);
-
-
-        List<Linking> linkings = new ArrayList();
-        //System.out.println("我来自遥远的草原");
-        for (int i = 0; i < nodes.size(); i++) {
-            linkings.addAll(this.linkingService.findOneBySql("linking", "rear_id", Integer.valueOf(((Node) nodes.get(i)).getId())));
-        }
-        echartjson.setLinks(NodeUtils.change(linkings, nodes));
-        String jsonString = JSONObject.toJSONString(echartjson);
-        model.addAttribute("msg", jsonString);
-        model.addAttribute("nodeid", Integer.valueOf(((Course) course.get(0)).getNodeId()));
-        System.out.println("nodeid " + ((Course) course.get(0)).getNodeId());
+        EchartJson echartjson = EchartjsonUtils.getEchartJson(allNodeTypeName, nodes, links);
+        model.addAttribute("msg", JSONObject.toJSONString(echartjson));
+        model.addAttribute("nodeid", course.getNodeId());
         return "course";
     }
 
-    @GetMapping({"/courseAdd"})
+
+    @GetMapping("/courseAdd")
     public String courserAdd(int schoolId) {
         return "course/courseAdd";
     }
 
-    @PostMapping({"/courseAdd"})
+    @PostMapping("/courseAdd")
     public String doCourseAdd(Course course, String value) {
         Member member = (Member) this.httpsession.getAttribute("currentUser");
         if (member == null) {
@@ -102,11 +81,10 @@ public class CourseController {
                 .findOneBySql("school", "id", Integer.valueOf(course.getSchoolId())).get(0)).getNodeId();
         Linking courseSchoolLink = new Linking(courseNodeId, schoolNodeId, 1, value);
         this.linkingService.save(courseSchoolLink);
-
         return "redirect:/school?schoolId=" + course.getSchoolId();
     }
 
-    @GetMapping({"/courseDelete"})
+    @GetMapping("/courseDelete")
     public String doCourseDelete(int courseId) {
         Course deleteCourse = (Course) this.courseService.findOneBySql("course", "course_id", Integer.valueOf(courseId))
                 .get(0);
@@ -121,7 +99,7 @@ public class CourseController {
         return "redirect:/school?schoolId=" + deleteCourse.getSchoolId();
     }
 
-    @GetMapping({"/courseEdit"})
+    @GetMapping("/courseEdit")
     public String courseEdit(int courseId, Model model) {
         List<Course> course = this.courseService.findOneBySql("course", "course_id", Integer.valueOf(courseId));
         List<School> school = this.schoolService.findOneBySql("school", "id",
@@ -131,7 +109,7 @@ public class CourseController {
         return "course/courseEdit";
     }
 
-    @PostMapping({"/doCourseEdit"})
+    @PostMapping("/doCourseEdit")
     public String doCourseEdit(Course course) {
         this.courseService.updateById(course);
         return "redirect:/school";

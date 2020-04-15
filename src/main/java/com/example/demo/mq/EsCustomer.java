@@ -1,10 +1,11 @@
 package com.example.demo.mq;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.system.es.esservice.impl.BaseServiceImpl;
+import com.example.demo.config.EsBeanNameConfig;
+import com.example.demo.util.BeanUtils;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.context.ApplicationContext;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,10 +21,8 @@ import javax.annotation.Resource;
 public class EsCustomer {
     public final static String SAVE = "Save";
     public final static String DELETE = "Delete";
-
     @Resource
-    private ApplicationContext applicationContext;
-
+    private BeanUtils beanUtils;
 
     /**
      * @Description: 对es和mysql进行同步
@@ -37,11 +36,18 @@ public class EsCustomer {
      */
     @RabbitListener(queuesToDeclare = @Queue(EsCustomer.SAVE))
     public void NodeSave(JSONObject message) {
-        //获取对应的bean name
-        String jpaBeanName = message.getString("JpaBeanName");
+        System.out.println("接收到 save消息：" + message);
+        String className = message.getString("ClassName");
+        //通过反射机制，得到实例化对象
         Object object = message.get("Object");
-        BaseServiceImpl baseService = (BaseServiceImpl) applicationContext.getBean(jpaBeanName);
-        baseService.save(object);
+
+        ElasticsearchRepository elasticsearchRepository = (ElasticsearchRepository) beanUtils.getBeanByClass(EsBeanNameConfig.getBeanClass(message.getString("JpaBeanClassName")));
+        if (elasticsearchRepository != null && object != null) {
+            //进行保存或修改操作
+            System.out.println(elasticsearchRepository);
+            System.out.println(object);
+            elasticsearchRepository.save(object);
+        }
     }
 
 
@@ -55,9 +61,14 @@ public class EsCustomer {
      */
     @RabbitListener(queuesToDeclare = @Queue(EsCustomer.DELETE))
     public void NodeDelete(JSONObject message) {
-        String jpaBeanName = message.getString("JpaBeanName");
+//        System.out.println("接收到 delete消息：" + message);
+        //获取对应的bean
+        ElasticsearchRepository elasticsearchRepository = (ElasticsearchRepository) beanUtils.getBeanByClass(EsBeanNameConfig.getBeanClass(message.getString("JpaBeanClassName")));
         Object object = message.get("Object");
-        BaseServiceImpl baseService = (BaseServiceImpl) applicationContext.getBean(jpaBeanName);
-        baseService.deleteById(object);
+        if (elasticsearchRepository != null && object != null) {
+            elasticsearchRepository.deleteById(object);
+        }
     }
+
+
 }

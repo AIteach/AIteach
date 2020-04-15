@@ -5,6 +5,7 @@ import com.example.demo.system.es.esentity.EsNode;
 import com.example.demo.system.es.esservice.EsNodeService;
 import com.example.demo.system.mysql.entity.*;
 import com.example.demo.system.mysql.service.impl.*;
+import com.example.demo.util.EchartjsonUtils;
 import com.example.demo.util.EsUtils;
 import com.example.demo.util.NodeUtils;
 import org.springframework.data.domain.Page;
@@ -48,12 +49,9 @@ public class IndexController {
 
     @GetMapping("/index")
     public String Index(Model model) {
-        // System.out.println("INDEX" + httpsession.getAttribute("currentUser"));
         if (httpsession.getAttribute("currentUser") != null) {
             model.addAttribute("loginType", true);
             Member member = (Member) httpsession.getAttribute("currentUser");
-            // System.out.println(member.getSchoolId());
-
             List<School> schoolList = schoolService.findAll();
             List<Course> courses = new ArrayList<Course>();
             for (int s = 0; s < schoolList.size(); s++) {
@@ -63,32 +61,19 @@ public class IndexController {
                     model.addAttribute("courseNode", courses);
                 }
             }
-            // 开始组json
-            EchartJson echartjson = new EchartJson(); // 新的返回json类
-            echartjson.setType("force"); // 设置图的样式
-
             // 设置类目
-            echartjson.setCategories(nodeTypeService.findAllNodeTypeName());
-
+            List<Name> allNodeTypeName = nodeTypeService.findAllNodeTypeName();
             List<Node> nodes = nodeService.findAll();
-            echartjson.setNodes(nodes);
-
             // 设置连接开始
-            List<Link> links = new ArrayList<>(); // 建立本次查询的links数组,由两个参数的link类组成
+            // 建立本次查询的links数组,由两个参数的link类组成
             List<Linking> linkings = new ArrayList<>();
-//            for (int i = 0; i < nodes.size(); i++) {
-//                System.out.println("没有ID" + nodes.get(i).getId());
-//            }
-            // System.out.println("我来自遥远的草原");
             for (int i = 0; i < nodes.size() && i < 10; i++) {
-                linkings.addAll(linkingService.findOneBySql("linking", "rear_id", nodes.get(i).getId())); // 读取数据库的全部linking连接关系
-                //System.out.println(nodes.get(i).getId() + "  " + nodes.get(i).getName());
+                // 读取数据库的全部linking连接关系
+                linkings.addAll(linkingService.findOneBySql("linking", "rear_id", nodes.get(i).getId()));
             }
-
-            echartjson.setLinks(NodeUtils.change(linkings, nodes));
-
-            String jsonString = JSONObject.toJSONString(echartjson);
-            model.addAttribute("msg", jsonString);
+            List<Link> links = NodeUtils.change(linkings, nodes);
+            EchartJson echartjson = EchartjsonUtils.getEchartJson(allNodeTypeName, nodes, links);
+            model.addAttribute("msg", JSONObject.toJSONString(echartjson));
             // 组json完毕
             model.addAttribute("schoolList", schoolList);
             return "index";
@@ -101,61 +86,39 @@ public class IndexController {
     @PostMapping("/doIndex")
     @ResponseBody
     public EchartJson doIndex() {
-
-        EchartJson echartjson = new EchartJson(); // 新的返回json类
-        echartjson.setType("force"); // 设置图的样式
-
         // 设置类目
         List<Name> names = new ArrayList<Name>();
-        List<NodeType> nodetypes = nodeTypeService.findAll(); // 找到所有结点,拥有属性ID和属性name,形成name数组
-        for (int i = 0; i < nodetypes.size(); i++) {
-            Name name = new Name(nodetypes.get(i).getName());
-            names.add(name);
-        }
-        echartjson.setCategories(names);
-
+        // 找到所有结点,拥有属性ID和属性name,形成name数组
+        List<Name> allNodeTypeName = nodeTypeService.findAllNodeTypeName();
         List<Node> nodes = nodeService.findAll();
-        echartjson.setNodes(nodes);
-
         // 读取数据库的全部linking连接关系
         List<Linking> linkings = linkingService.findAll();
-        echartjson.setLinks(NodeUtils.change(linkings, nodes));
-        return echartjson;
+        List<Link> links = NodeUtils.change(linkings, nodes);
+        return EchartjsonUtils.getEchartJson(allNodeTypeName, nodes, links);
     }
 
 
     @PostMapping("/search")
     public String search(String searchContent, Model model) {
-        // 新的返回json类
-        EchartJson echartjson = new EchartJson();
-        // 设置图的样式
-        echartjson.setType("force");
         // 设置类目
-        echartjson.setCategories(nodeTypeService.findAllNodeTypeName());
+        List<Name> allNodeTypeName = nodeTypeService.findAllNodeTypeName();
         Page<EsNode> search = esNodeServic.search(EsUtils.getSearchQuery("name", searchContent));
         List<EsNode> content = search.getContent();
-        //  for (EsNode esNode : content)
-        //  System.out.println(esNode);
-
         List<Linking> linkings = new ArrayList<>();
-        for (int i = 0; i < content.size() && i < 5; i++) {
+        for (int i = 0; i < content.size() && i < 10; i++) {
             linkings.addAll(linkingService.findAllByPreIdOrRearId(content.get(i).getId()));
         }
 
-//        List<Link> link = new ArrayList<>();
         Set<Integer> nodeId = new HashSet<>();
         for (Linking linking : linkings) {
-            //System.out.println(linking);
             nodeId.add(linking.getPreId());
             nodeId.add(linking.getRearId());
-//            link.add(new Link(linking.getRearId(), linking.getPreId(), linking.getValue()));
         }
         Integer[] ids = new Integer[nodeId.size()];
         nodeId.toArray(ids);
-        // System.out.println(Arrays.toString(ids));
         List<Node> nodes = nodeService.findListById(ids);
-        echartjson.setNodes(nodes);
-        echartjson.setLinks(NodeUtils.change(linkings, nodes));
+        List<Link> links = NodeUtils.change(linkings, nodes);
+        EchartJson echartjson = EchartjsonUtils.getEchartJson(allNodeTypeName, nodes, links);
         model.addAttribute("msg", JSONObject.toJSONString(echartjson));
         model.addAttribute("loginType", true);
         // 组json完毕

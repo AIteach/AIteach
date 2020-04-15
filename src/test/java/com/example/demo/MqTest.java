@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.system.es.esservice.EsNodeService;
 import com.example.demo.system.mysql.entity.Node;
 import com.example.demo.system.mysql.service.impl.ChapterService;
+import com.example.demo.system.mysql.service.impl.CourseService;
 import com.example.demo.system.mysql.service.impl.KgService;
 import com.example.demo.system.mysql.service.impl.NodeService;
 import org.junit.Test;
@@ -22,10 +23,15 @@ public class MqTest {
     private EsNodeService esNodeService;
     @Resource
     private ChapterService chapterService;
-
+    @Resource
+    private CourseService courseService;
     @Resource
     private KgService kgService;
 
+    @Test
+    public void test222() {
+        courseService.findAll().forEach(course -> courseService.save(course));
+    }
 
     @Test
     public void test333() {
@@ -42,17 +48,20 @@ public class MqTest {
     }
 
     @Test
-    public void test1() throws InterruptedException {
-        for (int i = 0; i < 100; i++)
-            nodeService.saveNode(new Node(i, i, "name2" + i, "value2" + i, 30, "/"));
-        Thread.sleep(5000);
+    public void test44() {
+        chapterService.findAll().forEach(chapter -> chapterService.delete(chapter.getChapterId()));
     }
-
 
     @Test
-    public void test2() {
-        nodeService.findAll().forEach(e -> System.out.println(e));
+    public void test11() {
+        nodeService.findAll().forEach(node -> nodeService.deleteById(node.getId()));
     }
+
+    @Test
+    public void test1() {
+        nodeService.findAll().forEach(node -> nodeService.saveNode(node));
+    }
+
 
     @Test
     public void test3() throws InterruptedException {

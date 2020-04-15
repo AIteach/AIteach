@@ -38,6 +38,11 @@ public class KgService implements IKgService {
     private RabbitTemplate rabbitTemplate;
 
     @Override
+    public List<Kg> findKgBychapterId(int chapterId) {
+        return kgJpaRepository.findAllByChapterId(chapterId);
+    }
+
+    @Override
     public List<Kg> findAll() {
         return kgJpaRepository.findAll();
     }
@@ -61,7 +66,7 @@ public class KgService implements IKgService {
     public Kg save(Kg kg) {
         // TODO Auto-generated method stub
         Kg save = kgJpaRepository.save(kg);
-        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(KGSERVICE_ES_BEAN_NAME, Kg.toEsKg(save)));
+        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(KGSERVICE_ES_BEAN_NAME, save.toEsKg()));
         return save;
     }
 
@@ -75,7 +80,8 @@ public class KgService implements IKgService {
     @Modifying
     @Override
     public void updateByEntiy(Kg kg) {
-        this.kgJpaRepository.save(kg);
+        Kg save = kgJpaRepository.save(kg);
+        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(KGSERVICE_ES_BEAN_NAME, save.toEsKg()));
     }
 
     /*

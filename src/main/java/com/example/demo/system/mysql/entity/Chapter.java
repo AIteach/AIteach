@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Entity(name = "chapter_test")
+@Entity(name = "chapter")
 public class Chapter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,14 +31,14 @@ public class Chapter {
     private int linkNum;
     private String chapterRelation;
 
-    public static EsChapter toEsChapter(Chapter chapter) {
+    public EsChapter toEsChapter() {
         EsChapter esChapter = new EsChapter();
-        esChapter.setChapterDesc(chapter.getChapterDesc());
-        esChapter.setChapterId(chapter.getChapterId());
-        esChapter.setChapterName(chapter.getChapterName());
-        esChapter.setCourseId(chapter.getCourseId());
-        esChapter.setCreaterId(chapter.getCreaterId());
-        esChapter.setNodeId(chapter.getNodeId());
+        esChapter.setChapterDesc(chapterDesc);
+        esChapter.setChapterId(chapterId);
+        esChapter.setChapterName(chapterName);
+        esChapter.setCourseId(courseId);
+        esChapter.setCreaterId(createrId);
+        esChapter.setNodeId(nodeId);
         return esChapter;
     }
 

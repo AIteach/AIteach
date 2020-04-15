@@ -1,6 +1,7 @@
 package com.example.demo.system.mysql.service.impl;
 
 import com.example.demo.mq.EsCustomer;
+import com.example.demo.system.es.esdao.EsChapterJpa;
 import com.example.demo.system.mysql.dao.ChapterJpaRepository;
 import com.example.demo.system.mysql.dao.LinkingJpaRepository;
 import com.example.demo.system.mysql.entity.Chapter;
@@ -18,7 +19,6 @@ import java.util.List;
 
 @Service("chapterService")
 public class ChapterService implements IChapterService {
-    private final static String CHAPTERSERVICE_ES_BEAN_NAME = "esChapterServiceImpl";
     @Resource
     private ChapterJpaRepository chapterJpaRepository;
     @Resource
@@ -32,6 +32,16 @@ public class ChapterService implements IChapterService {
 
     @Resource
     private RabbitTemplate rabbitTemplate;
+
+    @Override
+    public List<Chapter> findChapterByCourseId(int courseId) {
+        return chapterJpaRepository.findByCourseId(courseId);
+    }
+
+    @Override
+    public Chapter findOneByChapterId(int chapterId) {
+        return chapterJpaRepository.findById(chapterId).get();
+    }
 
     @Override
     public List<Chapter> findAll() {
@@ -59,13 +69,13 @@ public class ChapterService implements IChapterService {
     public Chapter save(Chapter chapter) {
         // TODO Auto-generated method stub
         Chapter save = chapterJpaRepository.save(chapter);
-        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(CHAPTERSERVICE_ES_BEAN_NAME, Chapter.toEsChapter(chapter)));
+        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(EsChapterJpa.class.getSimpleName(), chapter.toEsChapter()));
         return save;
     }
 
     public void delete(int kgId) {
         chapterJpaRepository.deleteById(kgId);
-        rabbitTemplate.convertAndSend("", EsCustomer.DELETE, JsonUtils.getEsMessage(CHAPTERSERVICE_ES_BEAN_NAME, kgId));
+        rabbitTemplate.convertAndSend("", EsCustomer.DELETE, JsonUtils.getEsMessage(EsChapterJpa.class.getSimpleName(), kgId));
     }
 
     @Override

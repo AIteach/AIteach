@@ -7,8 +7,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import com.example.demo.system.mysql.entity.Chapter;
-
 import java.io.Serializable;
 
 /**
@@ -29,12 +27,4 @@ public class EsChapter implements Serializable {
     private String chapterDesc;
 
 
-    public void change(Chapter chapter) {
-        this.chapterDesc = chapter.getChapterDesc();
-        this.chapterId = chapter.getChapterId();
-        this.chapterName = chapter.getChapterName();
-        this.courseId = chapter.getCourseId();
-        this.createrId = chapter.getCreaterId();
-        this.nodeId = chapter.getNodeId();
-    }
 }

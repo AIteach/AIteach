@@ -1,34 +1,40 @@
 /**
-	时间：2018年4月6日
-	地点：
-	包名：com.example.demo.system.service
-	项目名：grap
- * 
+ * 时间：2018年4月6日
+ * 地点：
+ * 包名：com.example.demo.system.service
+ * 项目名：grap
  */
 package com.example.demo.system.mysql.service;
 
-import java.util.List;
-
 import com.example.demo.system.mysql.entity.Course;
+
+import java.util.List;
 
 /**
  * @author Administrator
- *
  */
 public interface ICourseService {
 
-	/**
-	 * 方法名:com.example.demo.system.service 文件名:findAll
-	 */
-	public List<Course> findAll();
 
-	public List<Course> findOneBySql(String tablename, String filed, Object o);
+    /**
+     * @Description: 通过 CourseId查找课程
+     * @MethodName: findCourseByCourseId
+     * @Param: [courseId]
+     * @Return: com.example.demo.system.mysql.entity.Course
+     * @Author: 842712494@qq.com
+     * @Date: 2020/4/15 0:48
+     */
+    Course findCourseByCourseId(int courseId);
 
-	public Course save(Course course);
+    List<Course> findAll();
 
-	void deleteById(int courseId);
+    List<Course> findOneBySql(String tablename, String filed, Object o);
 
-	void updateById(Course course);
-	// public List<Course> kgNodeId(String tablename,String filed, Object o);
+    Course save(Course course);
+
+    void deleteById(int courseId);
+
+    void updateById(Course course);
+    // public List<Course> kgNodeId(String tablename,String filed, Object o);
 
 }

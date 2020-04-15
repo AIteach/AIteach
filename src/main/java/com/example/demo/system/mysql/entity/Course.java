@@ -6,6 +6,7 @@
  */
 package com.example.demo.system.mysql.entity;
 
+import com.example.demo.system.es.esentity.EsCourse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,6 @@ import java.util.Date;
 
 /**
  * @author Administrator
- *
  */
 @Data
 @AllArgsConstructor
@@ -42,4 +42,15 @@ public class Course {
     private int stuNum;
     private int LinkNum;
     private String url;
+
+    public EsCourse toEsCourse() {
+        EsCourse esCourse = new EsCourse();
+        esCourse.setCourseDesc(courseDesc);
+        esCourse.setCourseId(courseId);
+        esCourse.setCourseName(courseName);
+        esCourse.setNodeId(nodeId);
+        esCourse.setSchoolId(schoolId);
+        esCourse.setCreaterId(createrId);
+        return esCourse;
+    }
 }

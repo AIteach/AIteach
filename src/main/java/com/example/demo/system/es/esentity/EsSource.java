@@ -6,7 +6,6 @@
  */
 package com.example.demo.system.es.esentity;
 
-import com.example.demo.system.mysql.entity.Source;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -21,7 +20,7 @@ import java.io.Serializable;
  */
 @Data
 @ToString
-@Document(indexName = "source_test")
+@Document(indexName = "source")
 public class EsSource implements Serializable {
     @Id
     private int id;
@@ -32,14 +31,4 @@ public class EsSource implements Serializable {
     private String sourceName;
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String sourceDesc;
-
-    public void change(Source source) {
-        this.createrId = source.getCreaterId();
-        this.id = source.getId();
-        this.kgId = source.getKgId();
-        this.nodeId = source.getNodeId();
-        this.sourceDesc = source.getSourceDesc();
-        this.sourceName = source.getSourceName();
-    }
-
 }

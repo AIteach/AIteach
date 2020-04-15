@@ -7,7 +7,6 @@
  */
 package com.example.demo.system.es.esentity;
 
-import com.example.demo.system.mysql.entity.Kg;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -23,7 +22,7 @@ import java.io.Serializable;
  */
 @Data
 @ToString
-@Document(indexName = "kg_test")
+@Document(indexName = "kg")
 public class EsKg  implements Serializable {
 	@Id
 	private int kgId;
@@ -36,14 +35,6 @@ public class EsKg  implements Serializable {
 	private int courseId;
 	private int chapterId;
 
-	public void change(Kg kg) {
-		this.chapterId = kg.getChapterId();
-		this.courseId = kg.getCourseId();
-		this.createrId = kg.getCreaterId();
-		this.kgDesc = kg.getKgDesc();
-		this.kgId = kg.getKgId();
-		this.kgName = kg.getKgName();
-		this.nodeId = kg.getNodeId();
-	}
+
 
 }

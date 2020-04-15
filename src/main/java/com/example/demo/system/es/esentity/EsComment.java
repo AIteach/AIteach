@@ -1,6 +1,5 @@
 package com.example.demo.system.es.esentity;
 
-import com.example.demo.system.mysql.entity.Comment;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -16,7 +15,7 @@ import java.util.Date;
  */
 @Data
 @ToString
-@Document(indexName = "comment_test")
+@Document(indexName = "comment")
 public class EsComment implements Serializable {
     // 评论id
     @Id
@@ -29,9 +28,4 @@ public class EsComment implements Serializable {
     // 评论发表时间
     private Date ctime;
 
-    public void change(Comment comment) {
-        this.id = comment.getId();
-        this.ctime = comment.getCtime();
-        this.commentContent = comment.getCommentContent();
-    }
 }

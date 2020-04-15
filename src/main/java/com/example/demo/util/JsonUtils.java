@@ -11,9 +11,12 @@ import com.alibaba.fastjson.JSONObject;
  * @Version: 1.0.0
  */
 public class JsonUtils {
+
     public static JSONObject getEsMessage(String JpaBeanName, Object object) {
         JSONObject json = new JSONObject();
-        json.put("JpaBeanName", JpaBeanName);
+        //传入DAO接口名称
+        json.put("JpaBeanClassName", JpaBeanName);
+        //将对象转成json字符串
         json.put("Object", object);
         return json;
     }

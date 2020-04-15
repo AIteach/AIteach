@@ -7,7 +7,6 @@
  */
 package com.example.demo.system.es.esentity;
 
-import com.example.demo.system.mysql.entity.Course;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -35,12 +34,5 @@ public class EsCourse implements Serializable {
 	private int schoolId;
 	private int createrId;
 
-	public void change(Course course) {
-		this.courseId = course.getCourseId();
-		this.courseDesc = course.getCourseDesc();
-		this.courseName = course.getCourseName();
-		this.nodeId = course.getNodeId();
-		this.createrId = course.getCreaterId();
-		this.schoolId = course.getSchoolId();
-	}
+
 }

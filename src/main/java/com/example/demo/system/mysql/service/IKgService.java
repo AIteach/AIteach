@@ -1,31 +1,40 @@
 /**
-	时间：2018年4月6日
-	地点：
-	包名：com.example.demo.system.service.impl
-	项目名：grap
- * 
+ * 时间：2018年4月6日
+ * 地点：
+ * 包名：com.example.demo.system.service.impl
+ * 项目名：grap
  */
 package com.example.demo.system.mysql.service;
 
-import java.util.List;
-
 import com.example.demo.system.mysql.entity.Kg;
+
+import java.util.List;
 
 /**
  * @author Administrator
- *
  */
 public interface IKgService {
-	public List<Kg> findAll();
 
-	public List<Kg> findOneBySql(String tablename, String filed, Object o);
+    /**
+     * @Description:
+     * @MethodName: findAllBychapterId
+     * @Param: [chapterId]
+     * @Return: List<Kg>
+     * @Author: 842712494@qq.com
+     * @Date: 2020/4/15 1:44
+     */
+    List<Kg> findKgBychapterId(int chapterId);
 
-	public Kg save(Kg kg);
+    List<Kg> findAll();
 
-	/**
-	 * 方法名:com.example.demo.system.service 文件名:updateByEntiy
-	 * 
-	 * @return
-	 */
-	void updateByEntiy(Kg kg);
+    List<Kg> findOneBySql(String tablename, String filed, Object o);
+
+    Kg save(Kg kg);
+
+    /**
+     * 方法名:com.example.demo.system.service 文件名:updateByEntiy
+     *
+     * @return
+     */
+    void updateByEntiy(Kg kg);
 }

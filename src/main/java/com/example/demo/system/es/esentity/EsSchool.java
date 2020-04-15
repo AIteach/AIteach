@@ -6,7 +6,6 @@
  */
 package com.example.demo.system.es.esentity;
 
-import com.example.demo.system.mysql.entity.School;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -22,7 +21,7 @@ import java.io.Serializable;
  */
 @Data
 @ToString
-@Document(indexName = "school_test")
+@Document(indexName = "school")
 public class EsSchool implements Serializable {
     @Id
     private int id;
@@ -33,12 +32,6 @@ public class EsSchool implements Serializable {
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String schoolDesc;
 
-    public void change(School school) {
-        this.createrId = school.getCreaterId();
-        this.id = school.getId();
-        this.nodeId = school.getNodeId();
-        this.schoolDesc = school.getSchoolDesc();
-        this.schoolName = school.getSchoolName();
-    }
+
 
 }

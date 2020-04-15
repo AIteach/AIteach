@@ -36,8 +36,9 @@ public class Comment {
 
     public void subLikeNum() {
         this.likenum--;
-        if (this.likenum < 0)
+        if (this.likenum < 0) {
             this.likenum = 0;
+        }
     }
 
     public void SetPositiveAndNagetive() {

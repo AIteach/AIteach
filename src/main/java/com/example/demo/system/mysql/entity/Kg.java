@@ -12,7 +12,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
@@ -41,15 +44,15 @@ public class Kg {
     private int kgParid;
     private int chapterId;
 
-    public static EsKg toEsKg(Kg kg) {
+    public EsKg toEsKg() {
         EsKg esKg = new EsKg();
-        esKg.setChapterId(kg.getChapterId());
-        esKg.setCourseId(kg.getCourseId());
-        esKg.setCreaterId(kg.getCreaterId());
-        esKg.setKgId(kg.getKgId());
-        esKg.setKgDesc(kg.getKgDesc());
-        esKg.setNodeId(kg.getNodeId());
-        esKg.setKgName(kg.getKgName());
+        esKg.setChapterId(chapterId);
+        esKg.setCourseId(courseId);
+        esKg.setCreaterId(createrId);
+        esKg.setKgId(kgId);
+        esKg.setKgDesc(kgDesc);
+        esKg.setNodeId(nodeId);
+        esKg.setKgName(kgName);
         return esKg;
     }
 }

@@ -1,16 +1,12 @@
-/**
- * 时间：2018年4月7日
- * 地点：
- * 包名：com.example.demo.system.service.impl
- * 项目名：grap
- */
 package com.example.demo.system.mysql.service.impl;
 
 import com.example.demo.mq.EsCustomer;
+import com.example.demo.system.es.esdao.EsNodeJpa;
 import com.example.demo.system.mysql.dao.NodeJpaRepository;
 import com.example.demo.system.mysql.entity.Node;
 import com.example.demo.system.mysql.service.INodeService;
 import com.example.demo.util.JsonUtils;
+import com.example.demo.util.NameUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -28,7 +24,6 @@ import java.util.List;
  */
 @Service("nodeService")
 public class NodeService implements INodeService {
-    private final static String ES_BEAN_NAME = "esNodeServiceImpl";
     @PersistenceContext
     private EntityManager entityManager;
     @Resource
@@ -47,7 +42,7 @@ public class NodeService implements INodeService {
 //        System.out.println(node);
         Node newNode = nodeJpaRepository.save(node);
         //往消息队列发送消息
-        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(ES_BEAN_NAME, Node.toEsNode(newNode)));
+        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(EsNodeJpa.class.getSimpleName(), Node.toEsNode(newNode)));
         return newNode;
     }
 
@@ -56,12 +51,11 @@ public class NodeService implements INodeService {
      */
     @Override
     public int saveCourse(Node courseNode) {
-        // this.nodeJpaRepository.save(courseNode);
-        System.out.println("加入课程中 。。。。。。。。。。等待");
         Node newNode = nodeJpaRepository.save(courseNode);
-        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(ES_BEAN_NAME, Node.toEsNode(newNode)));
+        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(EsNodeJpa.class.getSimpleName(), Node.toEsNode(newNode)));
         return newNode.getId();
     }
+
 
     @Override
     @Modifying
@@ -70,7 +64,7 @@ public class NodeService implements INodeService {
         // this.nodeJpaRepository.save(courseNode);
         System.out.println("修改课程中 。。。。。。。。。。等待");
         Node newNode = nodeJpaRepository.save(node);
-        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(ES_BEAN_NAME, Node.toEsNode(newNode)));
+        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(EsNodeJpa.class.getSimpleName(), Node.toEsNode(newNode)));
         return newNode.getId();
     }
 
@@ -102,8 +96,9 @@ public class NodeService implements INodeService {
     @Override
     public List<Node> findListById(Integer[] ids) {
         List<Node> nodes = new ArrayList<>();
-        for (int i = 0; i < ids.length; i++)
+        for (int i = 0; i < ids.length; i++) {
             nodes.add(nodeJpaRepository.findById(ids[i]).get());
+        }
         return nodes;
     }
 
@@ -112,7 +107,7 @@ public class NodeService implements INodeService {
      */
     public void deleteById(int deleteNodeId) {
         nodeJpaRepository.deleteById(deleteNodeId);
-        rabbitTemplate.convertAndSend("", EsCustomer.DELETE, JsonUtils.getEsMessage(ES_BEAN_NAME, deleteNodeId));
+        rabbitTemplate.convertAndSend("", EsCustomer.DELETE, JsonUtils.getEsMessage(NameUtils.NODESERVICE_ES_BEAN_NAME, deleteNodeId));
     }
 
     public List<Node> findByCategoryGreaterThanEqual(int i) {

@@ -22,7 +22,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Entity(name = "node_test")
+@Entity(name = "node")
 public class Node implements Serializable {  //结点信息
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
