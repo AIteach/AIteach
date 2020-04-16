@@ -122,8 +122,8 @@ public class CommentController {
         List<Name> names = CommentUtils.getCategories();
         CommentandName com = this.commentService.findCommentById(commentId);
         com.setCommentresponse(this.commentResponseService.findCommentResponseByCommentId(com.getComment().getId()));
-        List<Node> nodes = new ArrayList<Node>();
-        List<Link> links = new ArrayList<Link>();
+        List<Node> nodes = new ArrayList<>();
+        List<Link> links = new ArrayList<>();
         //评论根节点
         nodes.add(new Node(com.getComment().getCommentContent(), 0, 30, "/", nodes.size() + 1));
         //评论人
@@ -148,8 +148,6 @@ public class CommentController {
                 links.add(new Link(target, nodes.size() - 1, ""));
             }
         }
-//        echartjson.setNodes(nodes);
-//        echartjson.setLinks(links);
         return EchartjsonUtils.getEchartJson(names, nodes, links);
     }
 
@@ -163,50 +161,47 @@ public class CommentController {
     public JSONObject getCommentLike(@RequestParam(value = "commentId[]", required = false) String[] commentId,
                                      @RequestParam(value = "responId[]", required = false) String[] responId) {
         // required = false 避免数组为空时后台报错。
-        System.out.println(responId);
         Member me = (Member) httpsession.getAttribute("currentUser");
         JSONObject json = new JSONObject();
         if (me == null) {
             json.put("code", 0);
             json.put("body", "");
-            return json;
         } else {
             json.put("code", 1);
             JSONObject json1 = new JSONObject();
             if (commentId != null) {
                 for (String i : commentId) {
-                    if (this.CommentLikeService.findByUserIdAndCommentId(me.getId(), Integer.parseInt(i)) != null)
+                    if (this.CommentLikeService.findByUserIdAndCommentId(me.getId(), Integer.parseInt(i)) != null) {
                         json1.put(i, true);
-                    else
+                    } else {
                         json1.put(i, false);
+                    }
                 }
             }
 
             JSONObject json2 = new JSONObject();
             if (responId != null) {
                 for (String i : responId) {
-                    if (this.ResponseLikeService.findByUserIdAndCommentId(me.getId(), Integer.parseInt(i)) != null)
+                    if (this.ResponseLikeService.findByUserIdAndCommentId(me.getId(), Integer.parseInt(i)) != null) {
                         json2.put(i, true);
-                    else
+                    } else {
                         json2.put(i, false);
+                    }
                 }
             }
             JSONObject jsonall = new JSONObject();
             jsonall.put("commentClick", json1);
             jsonall.put("responseClick", json2);
             json.put("body", jsonall);
-            return json;
         }
+        return json;
     }
 
     @Transactional
     public Boolean cancelClickComment(int id, int user_id) {
         // 取消主评论点赞
         Comment comment = this.commentService.findById(id).get();
-        // System.out.println(comment);
         comment.subLikeNum();
-        // System.out.println(comment);
-        // System.out.println(comlike);
         try {
             this.CommentLikeService.deleteByUserIdAndCommentId(user_id, id);
             this.commentService.save(comment);
@@ -222,14 +217,11 @@ public class CommentController {
     public Boolean setClickComment(int id, int user_id) {
         // 主评论点赞
         Comment comment = this.commentService.findById(id).get();
-        // System.out.println(comment);
         comment.addLikeNum();
-        // System.out.println(comment);
         CommentLike comlike = new CommentLike();
         comlike.setCommentId(id);
         comlike.setCtime(new Date());
         comlike.setUserId(user_id);
-        // System.out.println(comlike);
         try {
             this.CommentLikeService.save(comlike);
             this.commentService.save(comment);
@@ -245,9 +237,7 @@ public class CommentController {
     public Boolean cancelClickResponse(int id, int user_id) {
         // 取消回复点赞
         CommentResponse comresponse = this.commentResponseService.findById(id).get();
-        // System.out.println(comresponse);
         comresponse.subLikeNum();
-        // System.out.println(comresponse);
         try {
             this.commentResponseService.save(comresponse);
             this.ResponseLikeService.deleteByUserIdAndCommentId(user_id, id);
@@ -263,12 +253,8 @@ public class CommentController {
     @Transactional
     public Boolean setClickResponse(int id, int user_id) {
         // 回复点赞
-        // System.out.println("idid:" + id);
-        // System.out.println("user_id:" + user_id);
         CommentResponse comresponse = this.commentResponseService.findById(id).get();
-        // System.out.println(comresponse);
         comresponse.addLikeNum();
-        // System.out.println(comresponse);
         ResponseLike response = new ResponseLike();
         response.setCommentId(id);
         response.setCtime(new Date());
@@ -288,11 +274,6 @@ public class CommentController {
     public JSONObject setClick(String num, String id, Boolean sign) {
         // 点赞动作,如果num为1主评论操作，num为2回复操作
         // id为对应评论的目标id
-//		 System.out.println(num);
-//		 System.out.println(id);
-//		 System.out.println(time);
-//		 System.out.println(sign);
-//		return null;
         Member me = (Member) httpsession.getAttribute("currentUser");
         JSONObject json = new JSONObject();
         if (sign) {

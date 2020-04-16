@@ -3,6 +3,7 @@ package com.example.demo.web;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.system.mysql.entity.*;
 import com.example.demo.system.mysql.service.impl.*;
+import com.example.demo.util.EchartjsonUtils;
 import com.example.demo.util.NodeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,34 +37,22 @@ public class MyGraphController {
 
     @GetMapping("/createrGraph")
     public String graphIndex(Model model) {
-
         Member member = (Member) httpsession.getAttribute("currentUser");
         if (member == null) {
             model.addAttribute("loginType", false);
             return "login";
         } else {
             model.addAttribute("loginType", true);
-            //新的返回json类
-            EchartJson echartjson = new EchartJson();
-            //设置图的样式
-            echartjson.setType("force");
-
-            //设置类目
-            echartjson.setCategories(nodeTypeService.findAllNodeTypeName());
-
-
+            List<Name> allNodeTypeName = nodeTypeService.findAllNodeTypeName();
             //遍历子节点
-            List<Node> nodes = new ArrayList<Node>();
+            List<Node> nodes = new ArrayList<>();
             //课程结点
             List<Course> course = courseService.findOneBySql("course", "creater_id", member.getId());
             model.addAttribute("courseNode", course);
             for (int i = 0; i < course.size(); i++) {
-                //Node node = new //Node(course.get(i).getCourseName(),course.get(i).getCourseId(),1,25,"/course?courseId="+course.get(i).getCourseId());
                 Node courseNode = nodeService.findOneBySql("node", "id", course.get(i).getNodeId()).get(0);
                 nodes.add(courseNode);
-
             }
-
             //遍历知识点
             for (int i = 0; i < course.size(); i++) {
                 List<Kg> kg = kgService.findOneBySql("kg", "course_id", course.get(i).getCourseId());
@@ -77,17 +66,14 @@ public class MyGraphController {
                     //nodeService.saveUser(node);
                 }
             }
-            echartjson.setNodes(nodes);
-
             //设置连接开始
-            List<Linking> linkings = new ArrayList<Linking>();
+            List<Linking> linkings = new ArrayList<>();
             for (int i = 0; i < nodes.size(); i++) {
                 //读取数据库的全部linking连接关系
                 linkings.addAll(linkingService.findOneBySql("linking", "rear_id", nodes.get(i).getId()));
             }
-
-            echartjson.setLinks(NodeUtils.change(linkings, nodes));
-
+            List<Link> links = NodeUtils.change(linkings, nodes);
+            EchartJson echartjson = EchartjsonUtils.getEchartJson(allNodeTypeName,nodes,links);
             model.addAttribute("msg", JSONObject.toJSONString(echartjson));
             return "graph/createrGraph";
         }
@@ -109,7 +95,7 @@ public class MyGraphController {
             //设置图的样式
             echartjson.setType("force");
             //设置类目
-            List<Name> names = new ArrayList<Name>();
+            List<Name> names = new ArrayList<>();
             //找到所有结点,拥有属性ID和属性name,形成name数组
             List<Course> course = courseService.findAll();
             for (int i = 0; i < course.size(); i++) {
@@ -122,12 +108,10 @@ public class MyGraphController {
             for (int j = 0; j < myCreateKg.size(); j++) {
                 Node node = new Node(myCreateKg.get(j).getKgName(), myCreateKg.get(j).getCourseId(), 20, "/kg?kgId=" + myCreateKg.get(j).getKgId(), myCreateKg.get(j).getNodeId());
                 nodes.add(node);
-                //nodeService.saveUser(node);
             }
             echartjson.setNodes(nodes);
             String jsonString = JSONObject.toJSONString(echartjson);
             model.addAttribute("msg", jsonString);
-
             return "graph/joinerGraph";
         }
     }
