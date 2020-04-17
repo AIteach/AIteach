@@ -114,8 +114,9 @@ public class CreateGraphController {
             CreatGraph Graph = new CreatGraph();
             if (id == 0) {
                 Graph = new CreatGraph(category1, links1, nodes1, content, title, member);
-            } else
+            } else {
                 Graph = new CreatGraph(id, category1, links1, nodes1, content, title, member);
+            }
             createGraphService.save(Graph);
             return "true";
         }
