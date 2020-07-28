@@ -6,40 +6,38 @@
  */
 package com.example.demo.system.mysql.service;
 
-import java.util.List;
-import java.util.Set;
-
 import com.example.demo.system.mysql.entity.Node;
+
+import java.util.List;
 
 
 /**
  * @author Administrator
- *
  */
 public interface INodeService {
-    public List<Node> findAll();
+    List<Node> findAll();
 
-    public Node saveNode(Node node);
+    Node saveNode(Node node);
 
     /**
      * 方法名:com.example.demo.system.service
-     文件名:saveCourse
+     * 文件名:saveCourse
      */
     int saveCourse(Node courseNode);
 
     /**
      * 方法名:com.example.demo.system.service
-     文件名:updateNode
+     * 文件名:updateNode
      */
     int updateNode(Node node);
 
     /**
      * 方法名:com.example.demo.system.service
-     文件名:findOneBySql
+     * 文件名:findOneBySql
      */
     List<Node> findOneBySql(String tablename, String filed, Object o);
 
     List<Node> findOneBySqlLike(String tablename, String filed, Object o);
 
-    public List<Node> findListById(Integer[] ids);
+    List<Node> findListById(Integer[] ids);
 }

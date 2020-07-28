@@ -69,7 +69,6 @@ public class ChapterService implements IChapterService {
     public Chapter save(Chapter chapter) {
         // TODO Auto-generated method stub
         Chapter save = chapterJpaRepository.save(chapter);
-        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(EsChapterJpa.class.getSimpleName(), chapter.toEsChapter()));
         return save;
     }
 

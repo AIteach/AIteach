@@ -6,22 +6,20 @@
  */
 package com.example.demo.web;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
 import com.example.demo.system.mysql.entity.Member;
 import com.example.demo.system.mysql.entity.Node;
 import com.example.demo.system.mysql.entity.School;
 import com.example.demo.system.mysql.service.IMemberService;
 import com.example.demo.system.mysql.service.impl.NodeService;
 import com.example.demo.system.mysql.service.impl.SchoolService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author Administrator 系统登陆页面
@@ -49,10 +47,9 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginIndex(Model model) {
-        if (httpsession.getAttribute("currentUser") != null)
-//			return "login";
+        if (httpsession.getAttribute("currentUser") != null) {
             return "redirect:/index";
-        else {
+        } else {
             model.addAttribute("loginType", false);
             return "login";
         }

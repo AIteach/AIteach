@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author Administrator
@@ -23,7 +24,7 @@ import javax.persistence.*;
 @ToString
 @Entity
 @Table(name = "source")
-public class Source {
+public class Source implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

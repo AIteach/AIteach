@@ -7,9 +7,9 @@
  */
 package com.example.demo.system.mysql.service;
 
-import java.util.List;
-
 import com.example.demo.system.mysql.entity.School;
+
+import java.util.List;
 
 /**
  * @author Administrator
@@ -21,4 +21,5 @@ public interface ISchoolService {
 	public List<School> findOneBySql(String tablename, String filed, Object o);
 	public int save(School school);
 	boolean findByUserNameAndPassword();
+	public School findBySchoolId(int id);
 }

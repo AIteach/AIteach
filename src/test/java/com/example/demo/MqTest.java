@@ -36,8 +36,7 @@ public class MqTest {
     @Test
     public void test333() {
         kgService.findAll().forEach(kg -> {
-            System.out.println(kg);
-            kgService.save(kg);
+            kgService.delete(kg.getKgId());
         });
 
     }

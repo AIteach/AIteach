@@ -6,9 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 
+/**
+ * @author 84271
+ * @EnableCaching : 开启基于注解的缓存
+ */
+@EnableCaching
 @SpringBootApplication
 public class GrapApplication extends SpringBootServletInitializer {
 
@@ -18,6 +24,7 @@ public class GrapApplication extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
+        //System.setProperty("es.set.netty.runtime.available.processors", "false");
         SpringApplication.run(GrapApplication.class, args);
     }
 

@@ -20,7 +20,7 @@ import java.io.Serializable;
  */
 @Data
 @ToString
-@Document(indexName = "node_test")
+@Document(indexName = "node")
 public class EsNode implements Serializable {  //结点信息
     @Id
     private int id;

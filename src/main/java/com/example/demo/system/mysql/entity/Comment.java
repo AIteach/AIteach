@@ -17,18 +17,26 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @Entity(name = "Comment")
-public class Comment {
+public class Comment implements MySqlEntityToEsEntity<EsComment> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; // 评论id
-    private int nodeId; // 节点id
-    private int userid; // 此评论所属用户id
+    // 评论id
+    private int id;
+    // 节点id
+    private int nodeId;
+    // 此评论所属用户id
+    private int userid;
     // private String username; //此评论所属用户名
-    private String commentContent; // 评论内容
-    private Date ctime; // 评论发表时间
-    private int likenum;// 点赞数
-    private double positive; // 积极性系数
-    private double nagetive; // 消极
+    // 评论内容
+    private String commentContent;
+    // 评论发表时间
+    private Date ctime;
+    // 点赞数
+    private int likenum;
+    // 积极性系数
+    private double positive;
+    // 消极
+    private double nagetive;
 
     public void addLikeNum() {
         this.likenum++;
@@ -48,7 +56,8 @@ public class Comment {
         this.nagetive = res[1];
     }
 
-    public EsComment toEsComment() {
+    @Override
+    public EsComment toEs() {
         EsComment esComment = new EsComment();
         esComment.setCommentContent(commentContent);
         esComment.setCtime(ctime);

@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @Entity(name = "kg")
-public class Kg {
+public class Kg  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    @Column(name = "kgId")
@@ -44,7 +45,7 @@ public class Kg {
     private int kgParid;
     private int chapterId;
 
-    public EsKg toEsKg() {
+    public EsKg toEs() {
         EsKg esKg = new EsKg();
         esKg.setChapterId(chapterId);
         esKg.setCourseId(courseId);

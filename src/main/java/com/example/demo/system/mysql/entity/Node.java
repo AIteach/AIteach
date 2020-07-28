@@ -48,14 +48,14 @@ public class Node implements Serializable {  //结点信息
         this.url = url;
     }
 
-    public static EsNode toEsNode(Node node) {
+    public  EsNode toEs() {
         EsNode esNode = new EsNode();
-        esNode.setValue(node.value);
-        esNode.setUrl(node.url);
-        esNode.setSymbolSize(node.symbolSize);
-        esNode.setName(node.name);
-        esNode.setId(node.id);
-        esNode.setCategory(node.category);
+        esNode.setValue(this.value);
+        esNode.setUrl(this.url);
+        esNode.setSymbolSize(this.symbolSize);
+        esNode.setName(this.name);
+        esNode.setId(this.id);
+        esNode.setCategory(this.category);
         return esNode;
     }
 

@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @Entity(name = "studentCourse")
-public class StudentCourese {
+public class StudentCourese  implements Serializable {
     @Id //member的ID是主键
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

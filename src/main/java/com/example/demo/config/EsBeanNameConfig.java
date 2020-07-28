@@ -17,13 +17,13 @@ public class EsBeanNameConfig {
     private static Map<String, Class<?>> esBeanName = new HashMap<>();
 
     static {
-        esBeanName.put("EsChapterJpa", EsChapterJpa.class);
-        esBeanName.put("EsCommentJpa", EsCommentJpa.class);
-        esBeanName.put("EsCourseJpa", EsCourseJpa.class);
-        esBeanName.put("EsKgJpa", EsKgJpa.class);
-        esBeanName.put("EsNodeJpa", EsNodeJpa.class);
-        esBeanName.put("EsSchoolJpa", EsNodeJpa.class);
-        esBeanName.put("EsSourceJpa", EsSourceJpa.class);
+        esBeanName.put("Chapter", EsChapterJpa.class);
+        esBeanName.put("Comment", EsCommentJpa.class);
+        esBeanName.put("Course", EsCourseJpa.class);
+        esBeanName.put("Kg", EsKgJpa.class);
+        esBeanName.put("Node", EsNodeJpa.class);
+        esBeanName.put("School", EsNodeJpa.class);
+        esBeanName.put("Source", EsSourceJpa.class);
     }
 
     public static Class<?> getBeanClass(String name) {

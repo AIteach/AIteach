@@ -12,12 +12,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
 
+/**
+ * @author 84271
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Entity(name = "chapter")
-public class Chapter {
+public class Chapter implements MySqlEntityToEsEntity<EsChapter> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chapterId;
@@ -31,7 +34,8 @@ public class Chapter {
     private int linkNum;
     private String chapterRelation;
 
-    public EsChapter toEsChapter() {
+    @Override
+    public EsChapter toEs() {
         EsChapter esChapter = new EsChapter();
         esChapter.setChapterDesc(chapterDesc);
         esChapter.setChapterId(chapterId);

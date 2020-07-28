@@ -6,6 +6,7 @@
  */
 package com.example.demo.system.mysql.entity;
 
+import com.example.demo.system.es.esentity.EsSchool;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * @author Administrator
@@ -24,7 +26,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @ToString
 @Entity(name = "school")
-public class School {
+public class School implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -46,5 +48,15 @@ public class School {
 
     public School(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    public EsSchool toEs() {
+        EsSchool esSchool = new EsSchool();
+        esSchool.setCreaterId(this.createrId);
+        esSchool.setId(this.id);
+        esSchool.setNodeId(this.nodeId);
+        esSchool.setSchoolDesc(this.schoolDesc);
+        esSchool.setSchoolName(this.schoolName);
+        return esSchool;
     }
 }

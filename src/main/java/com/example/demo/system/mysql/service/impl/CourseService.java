@@ -6,15 +6,14 @@
  */
 package com.example.demo.system.mysql.service.impl;
 
-import com.example.demo.mq.EsCustomer;
-import com.example.demo.system.es.esdao.EsCourseJpa;
 import com.example.demo.system.mysql.dao.CourseJpaRepository;
 import com.example.demo.system.mysql.dao.LinkingJpaRepository;
 import com.example.demo.system.mysql.entity.Course;
 import com.example.demo.system.mysql.entity.Node;
 import com.example.demo.system.mysql.service.ICourseService;
-import com.example.demo.util.JsonUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +24,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@CacheConfig(cacheNames = "courseService")
 @Service("courseService")
 public class CourseService implements ICourseService {
     @Resource
@@ -47,12 +47,15 @@ public class CourseService implements ICourseService {
         return courseJpaRepository.findById(courseId).get();
     }
 
+    @Cacheable(key = "#root.methodName")
     @Override
     public List<Course> findAll() {
         // TODO Auto-generated method stub
         return courseJpaRepository.findAll();
     }
 
+
+    @Cacheable(key = "#root.methodName+#a0+#a1+#a2")
     @Override
     public List<Course> findOneBySql(String tablename, String filed, Object o) {
         // TODO Auto-generated method stub
@@ -73,7 +76,7 @@ public class CourseService implements ICourseService {
     public void deleteById(int courseId) {
         // TODO Auto-generated method stub
         courseJpaRepository.deleteById(courseId);
-        rabbitTemplate.convertAndSend("", EsCustomer.DELETE, JsonUtils.getEsMessage(EsCourseJpa.class.getSimpleName(), courseId));
+//        rabbitTemplate.convertAndSend("", EsCustomer.DELETE, JsonUtils.getEsMessage(EsCourseJpa.class.getSimpleName(), courseId));
     }
 
     /**
@@ -83,7 +86,7 @@ public class CourseService implements ICourseService {
     // @CacheEvict(cacheNames="grap",allEntries=true)
     public Course save(Course course) {
         Course save = courseJpaRepository.save(course);
-        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(EsCourseJpa.class.getSimpleName(), save.toEsCourse()));
+//        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(EsCourseJpa.class.getSimpleName(), save.toEsCourse()));
         return save;
     }
 

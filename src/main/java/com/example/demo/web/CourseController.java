@@ -1,18 +1,20 @@
 package com.example.demo.web;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.classsearch.ClassSearchService;
+import com.example.demo.classsearch.to.ClassVO;
 import com.example.demo.system.mysql.entity.*;
 import com.example.demo.system.mysql.service.impl.*;
 import com.example.demo.util.EchartjsonUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 public class CourseController {
@@ -36,10 +38,13 @@ public class CourseController {
     private SchoolService schoolService;
 
     @Resource
+    private ClassSearchService ClassSearchService;
+
+    @Resource
     private ChapterService chapterService;
 
     @GetMapping("/course")
-    public String courseIndex(int courseId, Model model) {
+    public String courseIndex(@RequestParam("courseId") int courseId, Model model) {
         List<Name> allNodeTypeName = nodeTypeService.findAllNodeTypeName();
         List<Node> nodes = new ArrayList();
         Course course = courseService.findCourseByCourseId(courseId);
@@ -51,8 +56,26 @@ public class CourseController {
         }
         EchartJson echartjson = EchartjsonUtils.getEchartJson(allNodeTypeName, nodes, links);
         model.addAttribute("msg", JSONObject.toJSONString(echartjson));
+        model.addAttribute("course", course);
         model.addAttribute("nodeid", course.getNodeId());
         return "course";
+    }
+
+    @GetMapping("/getClassFromSearch")
+    @ResponseBody
+    public JSONObject getClassFromSearch(@RequestParam("name") String name) throws ExecutionException, InterruptedException {
+        System.out.println(name);
+        JSONObject json = new JSONObject();
+        ArrayList<ClassVO> classFromSearch = ClassSearchService.getClassFromSearch(name.trim());
+        if (classFromSearch != null) {
+            json.put("code", 200);
+            json.put("classList", classFromSearch);
+            json.put("count", classFromSearch.size());
+        } else {
+            json.put("code", 0);
+            json.put("error", "无法获取数据！");
+        }
+        return json;
     }
 
 

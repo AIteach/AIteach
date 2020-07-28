@@ -61,7 +61,7 @@ public class EsCustomer {
      */
     @RabbitListener(queuesToDeclare = @Queue(EsCustomer.DELETE))
     public void NodeDelete(JSONObject message) {
-//        System.out.println("接收到 delete消息：" + message);
+        System.out.println("接收到 delete消息：" + message);
         //获取对应的bean
         ElasticsearchRepository elasticsearchRepository = (ElasticsearchRepository) beanUtils.getBeanByClass(EsBeanNameConfig.getBeanClass(message.getString("JpaBeanClassName")));
         Object object = message.get("Object");

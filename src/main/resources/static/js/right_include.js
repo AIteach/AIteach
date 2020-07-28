@@ -7,6 +7,7 @@ function msg(message) {
 
 var nodeid = $('#hidden').val(); // 当前页面节点信息
 var login_sign = $('#login_sign').val(); // 是否登录标识
+var className = $('#classhidden').val();
 Vue.filter('dateFormat', function (data) {
     // 定义时间处理函数
     var dt = new Date(data);// 时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -30,7 +31,9 @@ var vm = new Vue({
         comment_data: {"comment_sign": null, "comment_id": null, "user_id": null, "comment_data": null},// 添加评论的标志和id
         comment_show: false,// 评论框显示/隐藏标志
         response_click: {},// 回复点赞
-        login_sign: login_sign  // 是否登录标识
+        login_sign: login_sign,  // 是否登录标识
+        className: className,
+        classList: []
     },
     methods: {// 方法
         setCommentData(comment_sign, comment_id, user_id) {
@@ -139,18 +142,38 @@ var vm = new Vue({
             if (data == 1) {
                 this.show_color = [true, false, false]
             } else if (data == 2) {
-            	getAllComments()
+                getAllComments()
                 this.show_color = [false, true, false]
             } else {
                 this.show_color = [false, false, true]
             }
         }
     },
-    created() {
-       // getAllComments() // 开始加载评论数据
+    created(){
+        // `this` 指向 vm 实例
+        SearchClassFromNetWork(className)
+        console.log('a is: ' + this.show)
     }
+    // 开始加载评论数据
+    // getAllComments
 })
 
+function SearchClassFromNetWork(name) {
+    console.log("SearchClassFromNetWork执行")
+    $.ajax({
+        type: "GET",
+        url: "/getClassFromSearch",
+        data: {name: className,},
+        dataType: 'json',
+        success: function (data) { // 把数据交给vm渲染
+            vm._data.classList = data
+            console.log(data)
+        }, error: function (e) {
+            msg("获取失败！")
+        }
+    });
+
+}
 
 function alter(id) {
     $.ajax({

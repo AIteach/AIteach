@@ -2,10 +2,8 @@ package com.example.demo;
 
 import com.example.demo.system.es.esentity.EsChapter;
 import com.example.demo.system.es.esentity.EsKg;
-import com.example.demo.system.es.esservice.EsCommentService;
-import com.example.demo.system.mysql.service.impl.CommentService;
-import com.example.demo.system.mysql.service.impl.KgService;
-import com.example.demo.system.mysql.service.impl.SourceService;
+import com.example.demo.system.es.esservice.*;
+import com.example.demo.system.mysql.service.impl.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,15 +39,53 @@ public class EsTest {
     @Resource
     private SourceService sourceService;
 
-
+    @Resource
+    private ChapterService chapterService;
+    @Resource
+    private NodeService nodeService;
+    @Resource
+    private EsNodeService esNodeService;
     @Resource
     private KgService kgService;
+    @Resource
+    private EsChapterService esChapterService;
 
+    @Resource
+    private SchoolService schoolService;
+    @Resource
+    private EsSchoolService esSchoolService;
+
+    @Resource
+    private CourseService courseService;
+    @Resource
+    private EsCourseService esCourseService;
+
+    @Resource
+    private EsCommentService esCommentService;
+    @Resource
+    private EsSourceService esSourceService;
+
+    @Resource
+    private EsKgService esKgService;
 
     @Test
     public void test2() {
         escommentservice.findAll().forEach(e -> System.out.println(e));
     }
 
+
+    @Test
+    public void test() {
+        commentService.findAll().forEach(e -> {
+            esCommentService.save(e.toEs());
+        });
+        sourceService.findAll().forEach(e -> {
+            esSourceService.save(e.toEsSource());
+        });
+        kgService.findAll().forEach(e -> {
+            esKgService.save(e.toEs());
+        });
+
+    }
 
 }

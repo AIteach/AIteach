@@ -12,17 +12,17 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author Administrator
- *
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Entity(name = "user")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")

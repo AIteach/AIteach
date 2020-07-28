@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -23,7 +24,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @Entity(name = "student")
-public class Student {
+public class Student  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int stuId;

@@ -6,11 +6,9 @@
  */
 package com.example.demo.system.mysql.service.impl;
 
-import com.example.demo.mq.EsCustomer;
 import com.example.demo.system.mysql.dao.KgJpaRepository;
 import com.example.demo.system.mysql.entity.Kg;
 import com.example.demo.system.mysql.service.IKgService;
-import com.example.demo.util.JsonUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -66,14 +64,13 @@ public class KgService implements IKgService {
     public Kg save(Kg kg) {
         // TODO Auto-generated method stub
         Kg save = kgJpaRepository.save(kg);
-        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(KGSERVICE_ES_BEAN_NAME, save.toEsKg()));
+//        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(KGSERVICE_ES_BEAN_NAME, save.toEsKg()));
         return save;
     }
 
     public void delete(int kgId) {
         kgJpaRepository.deleteById(kgId);
-        rabbitTemplate.convertAndSend("", EsCustomer.DELETE, JsonUtils.getEsMessage(KGSERVICE_ES_BEAN_NAME, kgId));
-
+//        rabbitTemplate.convertAndSend("", EsCustomer.DELETE, JsonUtils.getEsMessage(KGSERVICE_ES_BEAN_NAME, kgId));
     }
 
     @Transactional
@@ -81,7 +78,7 @@ public class KgService implements IKgService {
     @Override
     public void updateByEntiy(Kg kg) {
         Kg save = kgJpaRepository.save(kg);
-        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(KGSERVICE_ES_BEAN_NAME, save.toEsKg()));
+//        rabbitTemplate.convertAndSend("", EsCustomer.SAVE, JsonUtils.getEsMessage(KGSERVICE_ES_BEAN_NAME, save.toEsKg()));
     }
 
     /*

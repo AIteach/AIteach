@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -23,7 +24,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @Entity(name = "course")
-public class Course {
+public class Course implements Serializable, MySqlEntityToEsEntity<EsCourse> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int courseId;
@@ -43,7 +44,8 @@ public class Course {
     private int LinkNum;
     private String url;
 
-    public EsCourse toEsCourse() {
+    @Override
+    public EsCourse toEs() {
         EsCourse esCourse = new EsCourse();
         esCourse.setCourseDesc(courseDesc);
         esCourse.setCourseId(courseId);
